@@ -1,5 +1,6 @@
 package scoreboard;
 
+import java.util.Collection;
 import java.util.UUID;
 
 public interface ScoreboardManager {
@@ -8,7 +9,7 @@ public interface ScoreboardManager {
 
     void updateScore(Score score, UUID matchIdentifier);
 
-    Score getMatchScore(UUID matchIdentifier);
-
     void finishMatch(UUID matchIdentifier);
+
+    Collection<Match> getSummaryOfMatches();
 }

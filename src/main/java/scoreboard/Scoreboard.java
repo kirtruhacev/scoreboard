@@ -1,6 +1,7 @@
 package scoreboard;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,7 +37,6 @@ public class Scoreboard implements ScoreboardManager {
         }
     }
 
-    @Override
     public Score getMatchScore(UUID matchIdentifier) {
         return getMatchByIdentifier(matchIdentifier).map(Match::getScore)
                    .orElseThrow(() -> new MatchNotFoundException(MATCH_NOT_EXIST_MESSAGE.formatted(matchIdentifier)));
@@ -45,6 +45,16 @@ public class Scoreboard implements ScoreboardManager {
     @Override
     public void finishMatch(UUID matchIdentifier) {
         getMatchByIdentifier(matchIdentifier).ifPresent(matches::remove);
+    }
+
+    @Override
+    public List<Match> getSummaryOfMatches() {
+        return matches.stream()
+                   .sorted(
+                       Comparator.comparingInt(Match::getTotalScore).reversed()
+                           .thenComparing(Match::getStartTime, Comparator.reverseOrder())
+                   )
+                   .toList();
     }
 
     public List<Match> getMatches() {

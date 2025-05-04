@@ -36,4 +36,8 @@ public class Score {
     public int getAway() {
         return away;
     }
+
+    public int sum() {
+        return home + away;
+    }
 }
