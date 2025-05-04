@@ -1,8 +1,11 @@
 package scoreboard;
 
 import static no.unit.nva.testutils.RandomDataGenerator.randomString;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +13,7 @@ import scoreboard.exceptions.MatchNotFoundException;
 
 class ScoreboardTest {
 
-    private ScoreboardManager scoreboard;
+    private Scoreboard scoreboard;
 
     @BeforeEach
     void setUp() {
@@ -39,6 +42,22 @@ class ScoreboardTest {
         var newScore = new Score(1, 0);
         assertThrows(MatchNotFoundException.class,
                      () -> scoreboard.updateScore(newScore, UUID.randomUUID()));
+    }
+
+    @Test
+    void shouldFinishAMatchAndRemoveItFromScoreBoard() {
+        var match = startMatch();
+
+        assertFalse(scoreboard.getMatches().isEmpty());
+
+        scoreboard.finishMatch(match.getIdentifier());
+
+        assertTrue(scoreboard.getMatches().isEmpty());
+    }
+
+    @Test
+    void shouldNotThrowExceptionWhenFinishingAMatchThatDoesNotExist() {
+        assertDoesNotThrow(() -> scoreboard.finishMatch(UUID.randomUUID()));
     }
 
     private Match startMatch() {

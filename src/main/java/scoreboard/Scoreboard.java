@@ -42,6 +42,11 @@ public class Scoreboard implements ScoreboardManager {
                    .orElseThrow(() -> new MatchNotFoundException(MATCH_NOT_EXIST_MESSAGE.formatted(matchIdentifier)));
     }
 
+    @Override
+    public void finishMatch(UUID matchIdentifier) {
+        getMatchByIdentifier(matchIdentifier).ifPresent(matches::remove);
+    }
+
     public List<Match> getMatches() {
         return matches;
     }

@@ -9,4 +9,6 @@ public interface ScoreboardManager {
     void updateScore(Score score, UUID matchIdentifier);
 
     Score getMatchScore(UUID matchIdentifier);
+
+    void finishMatch(UUID matchIdentifier);
 }
