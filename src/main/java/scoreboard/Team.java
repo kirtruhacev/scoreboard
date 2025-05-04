@@ -4,7 +4,7 @@ public class Team {
 
     private final String name;
 
-    public Team(String name) {
+    private Team(String name) {
         this.name = name;
     }
 
