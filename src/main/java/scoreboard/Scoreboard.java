@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import scoreboard.exceptions.MatchNotFoundException;
+import scoreboard.model.Match;
+import scoreboard.model.Score;
+import scoreboard.model.Team;
 
 public class Scoreboard implements ScoreboardManager {
 
@@ -49,15 +52,6 @@ public class Scoreboard implements ScoreboardManager {
                    .sorted(comparingInt(Match::getTotalScore).reversed()
                                .thenComparing(Match::getStartTime, reverseOrder()))
                    .toList();
-    }
-
-    public Score getMatchScore(UUID matchIdentifier) {
-        return getMatchByIdentifier(matchIdentifier).map(Match::getScore)
-                   .orElseThrow(() -> new MatchNotFoundException(MATCH_NOT_EXIST_MESSAGE.formatted(matchIdentifier)));
-    }
-
-    public List<Match> getMatches() {
-        return matches;
     }
 
     private Optional<Match> getMatchByIdentifier(UUID identifier) {
