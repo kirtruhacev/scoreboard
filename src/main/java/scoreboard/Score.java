@@ -7,7 +7,7 @@ public class Score {
     private final int home;
     private final int away;
 
-    public Score(int home, int away) {
+    private Score(int home, int away) {
         this.home = home;
         this.away = away;
     }
@@ -16,9 +16,13 @@ public class Score {
         return new Score(0, 0);
     }
 
+    public static Score createNew(int homeTeam, int awayTeam) {
+        return new Score(homeTeam, awayTeam);
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(getHome(), getAway());
+        return Objects.hash(home, away);
     }
 
     @Override
@@ -26,15 +30,7 @@ public class Score {
         if (!(o instanceof Score score)) {
             return false;
         }
-        return getHome() == score.getHome() && getAway() == score.getAway();
-    }
-
-    public int getHome() {
-        return home;
-    }
-
-    public int getAway() {
-        return away;
+        return home == score.home && away == score.away;
     }
 
     public int sum() {

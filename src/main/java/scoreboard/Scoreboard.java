@@ -1,7 +1,8 @@
 package scoreboard;
 
+import static java.util.Comparator.comparingInt;
+import static java.util.Comparator.reverseOrder;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -9,7 +10,7 @@ import scoreboard.exceptions.MatchNotFoundException;
 
 public class Scoreboard implements ScoreboardManager {
 
-    protected static final String MATCH_NOT_EXIST_MESSAGE = "Match with identifier %s does not exist";
+    protected static final String MATCH_NOT_EXIST_MESSAGE = "Match with identifier %s does not exist!";
     private final List<Match> matches;
 
     private Scoreboard(List<Match> matches) {
@@ -22,7 +23,7 @@ public class Scoreboard implements ScoreboardManager {
 
     @Override
     public Match startMatch(Team homeTeam, Team awayTeam) {
-        var match = new Match(homeTeam, awayTeam);
+        var match = Match.create(homeTeam, awayTeam);
         matches.add(match);
         return match;
     }
@@ -37,11 +38,6 @@ public class Scoreboard implements ScoreboardManager {
         }
     }
 
-    public Score getMatchScore(UUID matchIdentifier) {
-        return getMatchByIdentifier(matchIdentifier).map(Match::getScore)
-                   .orElseThrow(() -> new MatchNotFoundException(MATCH_NOT_EXIST_MESSAGE.formatted(matchIdentifier)));
-    }
-
     @Override
     public void finishMatch(UUID matchIdentifier) {
         getMatchByIdentifier(matchIdentifier).ifPresent(matches::remove);
@@ -50,11 +46,14 @@ public class Scoreboard implements ScoreboardManager {
     @Override
     public List<Match> getSummaryOfMatches() {
         return matches.stream()
-                   .sorted(
-                       Comparator.comparingInt(Match::getTotalScore).reversed()
-                           .thenComparing(Match::getStartTime, Comparator.reverseOrder())
-                   )
+                   .sorted(comparingInt(Match::getTotalScore).reversed()
+                               .thenComparing(Match::getStartTime, reverseOrder()))
                    .toList();
+    }
+
+    public Score getMatchScore(UUID matchIdentifier) {
+        return getMatchByIdentifier(matchIdentifier).map(Match::getScore)
+                   .orElseThrow(() -> new MatchNotFoundException(MATCH_NOT_EXIST_MESSAGE.formatted(matchIdentifier)));
     }
 
     public List<Match> getMatches() {

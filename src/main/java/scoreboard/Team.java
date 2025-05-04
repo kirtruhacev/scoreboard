@@ -1,12 +1,17 @@
 package scoreboard;
 
+import static java.util.Objects.isNull;
 import java.util.Objects;
 
 public class Team {
 
+    protected static final String TEAM_NAME_MISSING_MESSAGE = "Team name can not be missing!";
     private final String name;
 
     private Team(String name) {
+        if (isNull(name)) {
+            throw new IllegalArgumentException(TEAM_NAME_MISSING_MESSAGE);
+        }
         this.name = name;
     }
 

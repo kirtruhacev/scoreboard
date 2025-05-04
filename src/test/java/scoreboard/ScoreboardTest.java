@@ -1,5 +1,6 @@
 package scoreboard;
 
+import static java.util.UUID.randomUUID;
 import static no.unit.nva.testutils.RandomDataGenerator.randomString;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,9 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import java.time.Instant;
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import scoreboard.exceptions.MatchNotFoundException;
 
@@ -35,7 +34,7 @@ class ScoreboardTest {
     void shouldUpdateMatchScore() {
         var match = startMatch();
 
-        var newScore = new Score(1, 0);
+        var newScore = Score.createNew(1, 0);
         scoreboard.updateScore(newScore, match.getIdentifier());
 
         assertEquals(newScore, scoreboard.getMatchScore(match.getIdentifier()));
@@ -43,8 +42,9 @@ class ScoreboardTest {
 
     @Test
     void shouldThrowMatchNotFoundExceptionWhenUpdateMatchScoreForNonExistingMatch() {
-        var newScore = new Score(1, 0);
-        assertThrows(MatchNotFoundException.class, () -> scoreboard.updateScore(newScore, UUID.randomUUID()));
+        var newScore = Score.createNew(1, 0);
+
+        assertThrows(MatchNotFoundException.class, () -> scoreboard.updateScore(newScore, randomUUID()));
     }
 
     @Test
@@ -60,14 +60,14 @@ class ScoreboardTest {
 
     @Test
     void shouldNotThrowExceptionWhenFinishingAMatchThatDoesNotExist() {
-        assertDoesNotThrow(() -> scoreboard.finishMatch(UUID.randomUUID()));
+        assertDoesNotThrow(() -> scoreboard.finishMatch(randomUUID()));
     }
 
     @Test
     void shouldListAllMatchesOrderedByTheTotalScore() {
         var firstMatch = startMatch();
         var secondMatch = startMatch();
-        scoreboard.updateScore(new Score(1, 0), secondMatch.getIdentifier());
+        scoreboard.updateScore(Score.createNew(1, 0), secondMatch.getIdentifier());
 
         var summaryOfMatches = scoreboard.getSummaryOfMatches();
 
@@ -88,27 +88,27 @@ class ScoreboardTest {
 
     @Test
     void shouldReturnSummaryOfMatchesInExpectedOrder() {
-        var time = Instant.now();
+        var now = Instant.now();
 
         var mexicoCanadaMatch = startMatch("Mexico", "Canada");
-        scoreboard.updateScore(new Score(0, 5), mexicoCanadaMatch.getIdentifier());
-        mockStartTimeByAddingNanoSecondsToTime(mexicoCanadaMatch, time, 1);
+        scoreboard.updateScore(Score.createNew(0, 5), mexicoCanadaMatch.getIdentifier());
+        mockStartTimeByAddingNanoSecondsToTime(mexicoCanadaMatch, now, 1);
 
         var spainBrazilMatch = startMatch("Spain", "Brazil");
-        scoreboard.updateScore(new Score(10, 2), spainBrazilMatch.getIdentifier());
-        mockStartTimeByAddingNanoSecondsToTime(mexicoCanadaMatch, time, 2);
+        scoreboard.updateScore(Score.createNew(10, 2), spainBrazilMatch.getIdentifier());
+        mockStartTimeByAddingNanoSecondsToTime(mexicoCanadaMatch, now, 2);
 
         var germanyFranceMatch = startMatch("Germany", "France");
-        scoreboard.updateScore(new Score(2, 2), germanyFranceMatch.getIdentifier());
-        mockStartTimeByAddingNanoSecondsToTime(mexicoCanadaMatch, time, 3);
+        scoreboard.updateScore(Score.createNew(2, 2), germanyFranceMatch.getIdentifier());
+        mockStartTimeByAddingNanoSecondsToTime(mexicoCanadaMatch, now, 3);
 
         var uruguayItalyMatch = startMatch("Uruguay", "Italy");
-        scoreboard.updateScore(new Score(6, 6), uruguayItalyMatch.getIdentifier());
-        mockStartTimeByAddingNanoSecondsToTime(mexicoCanadaMatch, time, 4);
+        scoreboard.updateScore(Score.createNew(6, 6), uruguayItalyMatch.getIdentifier());
+        mockStartTimeByAddingNanoSecondsToTime(mexicoCanadaMatch, now, 4);
 
         var argentinaAustraliaMatch = startMatch("Argentina", "Australia");
-        scoreboard.updateScore(new Score(3, 1), argentinaAustraliaMatch.getIdentifier());
-        mockStartTimeByAddingNanoSecondsToTime(mexicoCanadaMatch, time, 5);
+        scoreboard.updateScore(Score.createNew(3, 1), argentinaAustraliaMatch.getIdentifier());
+        mockStartTimeByAddingNanoSecondsToTime(mexicoCanadaMatch, now, 5);
 
         var summaryOfMatches = scoreboard.getSummaryOfMatches();
 

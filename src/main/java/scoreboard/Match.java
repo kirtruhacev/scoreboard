@@ -1,6 +1,7 @@
 package scoreboard;
 
 import static java.time.Instant.now;
+import static java.util.Objects.isNull;
 import static java.util.UUID.randomUUID;
 import static scoreboard.Score.initialScore;
 import java.time.Instant;
@@ -9,18 +10,26 @@ import java.util.UUID;
 
 public class Match {
 
+    protected static final String TEAM_MISSING_MESSAGE = "Teams can not be missing when initializing a match!";
     private final Team homeTeam;
     private final Team awayTeam;
     private final UUID identifier;
     private final Instant startTime;
     private Score score;
 
-    public Match(Team homeTeam, Team awayTeam) {
+    private Match(Team homeTeam, Team awayTeam) {
+        if (isNull(homeTeam) || isNull(awayTeam)) {
+            throw new IllegalArgumentException(TEAM_MISSING_MESSAGE);
+        }
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.score = initialScore();
         this.startTime = now();
         this.identifier = randomUUID();
+    }
+
+    public static Match create(Team homeTeam, Team awayTeam) {
+        return new Match(homeTeam, awayTeam);
     }
 
     @Override
