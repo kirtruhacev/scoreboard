@@ -12,7 +12,11 @@ import static org.mockito.Mockito.when;
 import java.time.Instant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import scoreboard.exceptions.InvalidScoreException;
 import scoreboard.exceptions.MatchNotFoundException;
+import scoreboard.model.Match;
+import scoreboard.model.Score;
+import scoreboard.model.Team;
 
 class ScoreboardTest {
 
@@ -37,11 +41,18 @@ class ScoreboardTest {
         var newScore = Score.createNew(1, 0);
         scoreboard.updateScore(newScore, match.getIdentifier());
 
-        assertEquals(newScore, scoreboard.getMatchScore(match.getIdentifier()));
+        assertEquals(newScore, scoreboard.getSummaryOfMatches().getFirst().getScore());
     }
 
     @Test
-    void shouldThrowMatchNotFoundExceptionWhenUpdateMatchScoreForNonExistingMatch() {
+    void shouldThrowInvalidScoreExceptionWhenUpdatingScoreToNull() {
+        var match = startMatch();
+
+        assertThrows(InvalidScoreException.class, () -> scoreboard.updateScore(null, match.getIdentifier()));
+    }
+
+    @Test
+    void shouldThrowMatchNotFoundExceptionWhenUpdatingMatchScoreForNonExistingMatch() {
         var newScore = Score.createNew(1, 0);
 
         assertThrows(MatchNotFoundException.class, () -> scoreboard.updateScore(newScore, randomUUID()));
@@ -51,11 +62,11 @@ class ScoreboardTest {
     void shouldFinishAMatchAndRemoveItFromScoreBoard() {
         var match = startMatch();
 
-        assertFalse(scoreboard.getMatches().isEmpty());
+        assertFalse(scoreboard.getSummaryOfMatches().isEmpty());
 
         scoreboard.finishMatch(match.getIdentifier());
 
-        assertTrue(scoreboard.getMatches().isEmpty());
+        assertTrue(scoreboard.getSummaryOfMatches().isEmpty());
     }
 
     @Test
@@ -117,6 +128,11 @@ class ScoreboardTest {
         assertEquals(mexicoCanadaMatch.getIdentifier(), summaryOfMatches.get(2).getIdentifier());
         assertEquals(argentinaAustraliaMatch.getIdentifier(), summaryOfMatches.get(3).getIdentifier());
         assertEquals(germanyFranceMatch.getIdentifier(), summaryOfMatches.get(4).getIdentifier());
+    }
+
+    @Test
+    void shouldReturnEmptyCollectionWhenThereAreNoMatches() {
+        assertTrue(scoreboard.getSummaryOfMatches().isEmpty());
     }
 
     private static void mockStartTimeByAddingNanoSecondsToTime(Match mexicoCanadaMatch, Instant time, int nanosToAdd) {

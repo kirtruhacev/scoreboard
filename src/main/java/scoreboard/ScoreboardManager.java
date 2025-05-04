@@ -2,6 +2,9 @@ package scoreboard;
 
 import java.util.Collection;
 import java.util.UUID;
+import scoreboard.model.Match;
+import scoreboard.model.Score;
+import scoreboard.model.Team;
 
 public interface ScoreboardManager {
 

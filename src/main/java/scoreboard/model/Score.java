@@ -1,13 +1,19 @@
-package scoreboard;
+package scoreboard.model;
 
 import java.util.Objects;
+import scoreboard.exceptions.InvalidScoreException;
 
 public class Score {
 
+    protected static final String NEGATIVE_SCORE_MESSAGE = "Score can not be negative: home %s away %s";
     private final int home;
     private final int away;
 
     private Score(int home, int away) {
+        if (home < 0 || away < 0) {
+            throw new InvalidScoreException(
+                NEGATIVE_SCORE_MESSAGE.formatted(String.valueOf(home), String.valueOf(away)));
+        }
         this.home = home;
         this.away = away;
     }

@@ -1,7 +1,8 @@
-package scoreboard;
+package scoreboard.model;
 
 import static java.util.Objects.isNull;
 import java.util.Objects;
+import scoreboard.exceptions.InvalidTeamException;
 
 public class Team {
 
@@ -10,7 +11,7 @@ public class Team {
 
     private Team(String name) {
         if (isNull(name)) {
-            throw new IllegalArgumentException(TEAM_NAME_MISSING_MESSAGE);
+            throw new InvalidTeamException(TEAM_NAME_MISSING_MESSAGE);
         }
         this.name = name;
     }
