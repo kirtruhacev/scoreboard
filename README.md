@@ -28,4 +28,24 @@ World Cup Scoreboard library that shows all the ongoing matches and their scores
 - Creating and storing matches in the scoreboard before they start and after they are finished can be beneficial for managing the lifecycle of matches and maintaining historical data. However, this might not be Scoreboards responsibility. In the provided solution, the Scoreboard does not store Match instances before a match starts and after it is completed.
 
 
+### Guidelines
+
+#### Running the Project
+
+To build the project, ensure you have Java and Gradle installed on your system. You can start by compiling the code and running the project using the following command:
+
+```bash
+./gradlew build
+```
+
+#### Generating a test coverage report
+
+To generate test coverage report run command:
+
+```bash
+./gradlew test jacocoTestReport
+```
+
+Test report will be located at: **/build/reports/jacoco/test/html/index.html**
+
 
