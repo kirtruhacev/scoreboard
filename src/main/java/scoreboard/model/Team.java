@@ -2,6 +2,7 @@ package scoreboard.model;
 
 import static java.util.Objects.isNull;
 import java.util.Objects;
+import nva.commons.core.JacocoGenerated;
 import scoreboard.exceptions.InvalidTeamException;
 
 public class Team {
@@ -20,11 +21,13 @@ public class Team {
         return new Team(name);
     }
 
+    @JacocoGenerated
     @Override
     public int hashCode() {
         return Objects.hashCode(getName());
     }
 
+    @JacocoGenerated
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Team team)) {

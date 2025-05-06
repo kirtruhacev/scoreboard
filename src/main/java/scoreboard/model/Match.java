@@ -7,6 +7,7 @@ import static scoreboard.model.Score.initialScore;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
+import nva.commons.core.JacocoGenerated;
 import scoreboard.exceptions.InvalidMatchException;
 import scoreboard.exceptions.InvalidScoreException;
 import scoreboard.exceptions.InvalidTeamException;
@@ -40,11 +41,13 @@ public class Match {
         return new Match(homeTeam, awayTeam);
     }
 
+    @JacocoGenerated
     @Override
     public int hashCode() {
         return Objects.hash(getHomeTeam(), getAwayTeam(), getIdentifier(), getStartTime(), getScore());
     }
 
+    @JacocoGenerated
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Match match)) {

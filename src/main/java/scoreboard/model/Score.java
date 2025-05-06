@@ -1,6 +1,7 @@
 package scoreboard.model;
 
 import java.util.Objects;
+import nva.commons.core.JacocoGenerated;
 import scoreboard.exceptions.InvalidScoreException;
 
 public class Score {
@@ -26,11 +27,13 @@ public class Score {
         return new Score(homeTeam, awayTeam);
     }
 
+    @JacocoGenerated
     @Override
     public int hashCode() {
         return Objects.hash(home, away);
     }
 
+    @JacocoGenerated
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Score score)) {
